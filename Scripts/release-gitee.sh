@@ -29,6 +29,7 @@ manifest="$ROOT/dist/$key.json"
 download_url="https://gitee.com/$repo/releases/download/$tag/$key.zip"
 notes="${RELEASE_NOTES:-CleanDisk $version，macOS arm64。}"
 
+python3 -m unittest Tests/test_cleanup_gitee_releases.py
 swift test
 "$ROOT/Scripts/build-app.sh"
 ditto -c -k --sequesterRsrc --keepParent "$ROOT/dist/CleanDisk.app" "$archive"
@@ -117,6 +118,10 @@ if [[ -n "$sha" ]]; then
 else
     curl -fsS -X POST -H "Content-Type: application/json" \
         "$api/contents/$pointer?access_token=$token" -d "$payload" >/dev/null
+fi
+
+if [[ "${RELEASE_SKIP_CLEANUP:-0}" != "1" ]]; then
+    python3 "$ROOT/Scripts/cleanup-gitee-releases.py" --delete --repo "$repo"
 fi
 
 echo "https://gitee.com/$repo/releases/tag/$tag"

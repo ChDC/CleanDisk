@@ -47,3 +47,17 @@ RELEASE_NOTES="版本说明" ./Scripts/release-gitee.sh
 ```
 
 该令牌具有发布仓库的写入权限，只有私有源码仓库才能保存它，且不得输出到日志。重复执行同一 build 会替换该 Release 中同名的 ZIP 和 JSON 附件，因此正式发版前应递增 `CFBundleVersion`。
+
+## 自动清理旧 Release
+
+每次发版更新 `latest` 后，脚本会自动清理整个发布仓库：所有 `latest/*.json` 的 build 和下载 URL 指向的 Release 保留，其余 Release 删除，其他 App 也适用。
+
+```sh
+# 只预览，不删除
+python3 Scripts/cleanup-gitee-releases.py
+
+# 按相同规则实际删除
+python3 Scripts/cleanup-gitee-releases.py --delete
+```
+
+清理器先取得 Release 列表，再读取清单，降低其他 App 同时发版时误删新 Release 的风险。清单为空、无法解析、缺少 build 或下载地址时会中止。`RELEASE_SKIP_CLEANUP=1 ./Scripts/release-gitee.sh` 可在紧急情况下跳过本次清理。
