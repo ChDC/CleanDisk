@@ -17,7 +17,17 @@ cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 cp "$ROOT/Resources/AppIcon.png" "$APP/Contents/Resources/AppIcon.png"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
-codesign --force --sign - --timestamp=none "$APP"
+
+identity="${CODE_SIGN_IDENTITY:-}"
+if [[ -z "$identity" ]]; then
+    identity="$(security find-identity -v -p codesigning | awk -F'"' '/Apple Development:|Developer ID Application:/{print $2; exit}')"
+fi
+if [[ -n "$identity" ]]; then
+    codesign --force --sign "$identity" --options runtime --timestamp=none "$APP"
+else
+    echo "warning: no stable signing identity; macOS may request folder permissions again" >&2
+    codesign --force --sign - --timestamp=none "$APP"
+fi
 
 echo "$APP"
 if [[ "${1:-}" == "--open" ]]; then

@@ -19,7 +19,11 @@ final class AppViewModel: ObservableObject {
     }
     @Published var isScanning = false
     @Published var isCleaning = false
-    @Published var isSettingsPresented = false
+    @Published var activeSheet: AppSheet?
+    var isSettingsPresented: Bool {
+        get { activeSheet == .directorySettings }
+        set { activeSheet = newValue ? .directorySettings : nil }
+    }
     @Published var isCleanConfirmationPresented = false
     @Published var scanProgress = ScanProgress(path: "准备扫描…", candidateCount: 0)
     @Published var statusMessage = "扫描不会修改文件，清理前需要再次确认。"
@@ -106,6 +110,20 @@ final class AppViewModel: ObservableObject {
                 try? await Task.sleep(for: .seconds(30 * 60))
             }
         }
+    }
+
+    func presentPermissionGuideIfNeeded() {
+        let key = "permissionGuidePresented.v1"
+        guard activeSheet == nil, !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        activeSheet = .permissions
+    }
+
+    func openFullDiskAccessSettings() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles") else {
+            return
+        }
+        NSWorkspace.shared.open(url)
     }
 
     func checkForUpdates(manual: Bool = true) {
@@ -363,6 +381,13 @@ struct AppAlert: Identifiable {
         self.message = message
         self.release = release
     }
+}
+
+enum AppSheet: Identifiable {
+    case directorySettings
+    case permissions
+
+    var id: Self { self }
 }
 
 @MainActor

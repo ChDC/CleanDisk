@@ -27,6 +27,7 @@ struct DirectorySettingsView: View {
             Picker("", selection: $selectedTab) {
                 Text("自定义目录").tag(0)
                 Text("内置规则").tag(1)
+                Text("访问权限").tag(2)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -36,8 +37,11 @@ struct DirectorySettingsView: View {
             Divider()
             if selectedTab == 0 {
                 customDirectories
-            } else {
+            } else if selectedTab == 1 {
                 builtInRules
+            } else {
+                PermissionSettingsContent()
+                    .environmentObject(model)
             }
         }
         .frame(width: 720, height: 590)

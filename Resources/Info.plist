@@ -28,6 +28,12 @@
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSDesktopFolderUsageDescription</key>
+    <string>CleanDisk 需要扫描桌面上的项目构建产物。授权一次完全磁盘访问后，无需逐目录确认。</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>CleanDisk 需要扫描文稿中的项目构建产物。授权一次完全磁盘访问后，无需逐目录确认。</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>CleanDisk 需要扫描下载目录中的项目构建产物。授权一次完全磁盘访问后，无需逐目录确认。</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>

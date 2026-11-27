@@ -23,9 +23,15 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .sheet(isPresented: $model.isSettingsPresented) {
-            DirectorySettingsView()
-                .environmentObject(model)
+        .sheet(item: $model.activeSheet) { sheet in
+            switch sheet {
+            case .directorySettings:
+                DirectorySettingsView()
+                    .environmentObject(model)
+            case .permissions:
+                PermissionGuideView()
+                    .environmentObject(model)
+            }
         }
         .alert(item: $model.alert) { alert in
             if let release = alert.release {
@@ -53,7 +59,10 @@ struct ContentView: View {
         } message: {
             Text("共 \(model.selectedItems.count) 项，\(ByteFormatting.string(model.selectedByteCount))。清理前已排除 Native Shell 应用与安装包。")
         }
-        .onAppear { model.startUpdateWatcher() }
+        .onAppear {
+            model.startUpdateWatcher()
+            model.presentPermissionGuideIfNeeded()
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             model.checkForUpdates(manual: false)
         }

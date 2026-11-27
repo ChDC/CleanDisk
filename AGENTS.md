@@ -1,6 +1,7 @@
 # CleanDisk 项目规则
 
 - `secrets/release.env` 可保存 Gitee 发布令牌，但 GitHub 源码仓库必须保持私有。发版脚本优先读环境变量，再读此文件；禁止在日志、提交说明、Issue 或聊天中输出令牌值。
+- 正式构建不得退回 `codesign --sign -` 临时签名。沿用同一证书和 Bundle ID，避免 macOS 在更新后重置目录访问权限；权限说明见 `Docs/PERMISSIONS.md`。
 
 - 扫描器必须保持只读；删除统一使用 `TrashCleaner` 移到废纸篓，禁止直接 `removeItem` 处理用户扫描结果。
 - 新增项目类型时必须有项目标记，不允许只凭 `build`、`target` 等通用目录名判定垃圾。

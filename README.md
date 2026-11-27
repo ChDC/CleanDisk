@@ -57,7 +57,7 @@ open dist/CleanDisk.app
 - 清理仅调用 macOS 的“移到废纸篓”，不直接永久删除。
 - 清理前再次校验受保护路径、符号链接与 Native Shell 应用输出。
 - 嵌套或重复规则只统计、清理一次；缓存根目录和自定义根目录保留。
-- 某些系统或应用目录可能需要“完全磁盘访问权限”；无权限目录会跳过。
+- 使用稳定签名，并提供“完全磁盘访问”的一次性授权入口；无权限目录会跳过。详见 [Docs/PERMISSIONS.md](Docs/PERMISSIONS.md)。
 
 详细逆向依据见 [Docs/LEMON-RULES.md](Docs/LEMON-RULES.md)。
 大结果集的无响应排查与压力验证见 [Docs/PERFORMANCE.md](Docs/PERFORMANCE.md)。
