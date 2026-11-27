@@ -1,5 +1,7 @@
 # CleanDisk 项目规则
 
+- `secrets/release.env` 可保存 Gitee 发布令牌，但 GitHub 源码仓库必须保持私有。发版脚本优先读环境变量，再读此文件；禁止在日志、提交说明、Issue 或聊天中输出令牌值。
+
 - 扫描器必须保持只读；删除统一使用 `TrashCleaner` 移到废纸篓，禁止直接 `removeItem` 处理用户扫描结果。
 - 新增项目类型时必须有项目标记，不允许只凭 `build`、`target` 等通用目录名判定垃圾。
 - Native Shell 是 https://nsh.dev 的 Longbridge Rust-first 原生 UI 框架。`.nsh/out` 下的应用与安装包必须在扫描和清理两层都排除。

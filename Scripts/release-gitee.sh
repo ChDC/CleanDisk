@@ -6,8 +6,11 @@ cd "$ROOT"
 
 repo="${GITEE_REPO:-lanshanshu/release}"
 token="${GITEE_TOKEN:-}"
+if [[ -z "$token" && -f "$ROOT/secrets/release.env" ]]; then
+    token="$(sed -n 's/^GITEE_TOKEN=//p' "$ROOT/secrets/release.env" | head -1)"
+fi
 if [[ -z "$token" ]]; then
-    echo "GITEE_TOKEN is required; it is never read from or written to this repository" >&2
+    echo "GITEE_TOKEN is required in the environment or secrets/release.env" >&2
     exit 1
 fi
 

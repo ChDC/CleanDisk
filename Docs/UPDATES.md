@@ -38,10 +38,12 @@
 
 ## 发布
 
-`Scripts/release-gitee.sh` 会运行测试、构建应用、打包 ZIP、创建或复用对应 build 的 Gitee Release，并更新 `latest` 清单。令牌仅从环境变量读取：
+`Scripts/release-gitee.sh` 会运行测试、构建应用、打包 ZIP、创建或复用对应 build 的 Gitee Release，并更新 `latest` 清单。令牌优先从环境变量读取，未设置时读取本仓库的 `secrets/release.env`：
 
 ```sh
 GITEE_TOKEN=... RELEASE_NOTES="版本说明" ./Scripts/release-gitee.sh
+# 或先把令牌写入 secrets/release.env，然后运行：
+RELEASE_NOTES="版本说明" ./Scripts/release-gitee.sh
 ```
 
-脚本不会把令牌保存到仓库。重复执行同一 build 会替换该 Release 中同名的 ZIP 和 JSON 附件，因此正式发版前应递增 `CFBundleVersion`。
+该令牌具有发布仓库的写入权限，只有私有源码仓库才能保存它，且不得输出到日志。重复执行同一 build 会替换该 Release 中同名的 ZIP 和 JSON 附件，因此正式发版前应递增 `CFBundleVersion`。
