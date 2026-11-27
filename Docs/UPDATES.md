@@ -35,3 +35,13 @@
 - 同一后台版本只提示一次，手动检查仍可再次显示。
 
 点击“下载更新”使用默认浏览器打开 Gitee 下载地址。应用不会自动下载、替换或安装未经验证的 macOS 包。
+
+## 发布
+
+`Scripts/release-gitee.sh` 会运行测试、构建应用、打包 ZIP、创建或复用对应 build 的 Gitee Release，并更新 `latest` 清单。令牌仅从环境变量读取：
+
+```sh
+GITEE_TOKEN=... RELEASE_NOTES="版本说明" ./Scripts/release-gitee.sh
+```
+
+脚本不会把令牌保存到仓库。重复执行同一 build 会替换该 Release 中同名的 ZIP 和 JSON 附件，因此正式发版前应递增 `CFBundleVersion`。
